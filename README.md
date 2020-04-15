@@ -13,6 +13,10 @@ Remover os arquivos listado abaixo, bem como suas referências:
 - src/index.css
 - src/logo.svg
 
+Atualizar os arquivos abaixo, removendo a referência dos arquivos removidos:
+- App.js
+- index.js
+
 
 ### Running
 ```
