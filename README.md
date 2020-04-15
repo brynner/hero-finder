@@ -41,3 +41,12 @@ Para deixar nossa aplicação mais atraente, vamos utilizar o Material UI como F
 ```
 npm install @material-ui/core
 ```
+
+
+### React Router
+
+Controle de rotas da aplicação.
+
+```
+npm install react-router-dom --save
+```
