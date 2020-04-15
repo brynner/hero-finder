@@ -30,3 +30,14 @@ yarn start
 cd app
 yarn build
 ```
+
+
+## Packages
+
+### Material UI
+
+Para deixar nossa aplicação mais atraente, vamos utilizar o Material UI como Framework de CSS.
+
+```
+npm install @material-ui/core
+```
