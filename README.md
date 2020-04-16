@@ -50,3 +50,12 @@ Controle de rotas da aplicação.
 ```
 npm install react-router-dom --save
 ```
+
+
+### AXIOS
+
+Auxilia requisições HTTP.
+
+```
+npm install axios
+```
