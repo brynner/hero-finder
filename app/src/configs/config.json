@@ -1,0 +1,7 @@
+{
+  "version": "1.0",
+  "api": {
+      "url": "http://gateway.marvel.com/v1/public",
+      "key": "2e93c54e2005d7c4dae12f34b35b3dcd"
+  }
+}
