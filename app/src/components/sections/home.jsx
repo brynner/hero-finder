@@ -37,39 +37,38 @@ export default class Home extends Component {
     let items = [];
     this.state.data.map((item, index) => {
       return (
-        items.push(<div key={index}>
+        items.push(
 
-          <Card className="card">
+          <Grid key={index} item xs={12} sm={6} md={3}>
+            <Card className="card">
 
-            <CardActionArea>
+              <CardActionArea>
 
-              {!item.thumbnail.path ? '' :
-                <CardMedia
-                  className="card-image"
-                  image={item.thumbnail.path + `.` + item.thumbnail.extension}
-                  title={item.name}
-                />
-              }
+                {!item.thumbnail.path ? '' :
+                  <CardMedia
+                    className="card-image"
+                    image={item.thumbnail.path + `.` + item.thumbnail.extension}
+                    title={item.name}
+                  />
+                }
 
-              <CardContent>
+                <CardContent>
 
-                <Grid container spacing={3}>
-                  <Grid item xs={12} sm={6} md={3}>
-                    <Typography noWrap component="p">{item.name}</Typography>
+                  <Grid container spacing={3}>
+                    <Grid item>
+                      <Typography noWrap component="p">{item.name}</Typography>
+                    </Grid>
                   </Grid>
-                </Grid>
 
-              </CardContent>
+                </CardContent>
 
-            </CardActionArea>
+              </CardActionArea>
 
-          </Card>
-
-          <br /><br />
-        </div>)
+            </Card>
+          </Grid>)
       )
     })
-    return items;
+    return <Grid container spacing={5}>{items}</Grid>;
   }
 
   render() {
