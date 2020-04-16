@@ -59,3 +59,12 @@ Auxilia requisições HTTP.
 ```
 npm install axios
 ```
+
+
+### Styled Components
+
+CSS em componentes.
+
+```
+npm install --save styled-components
+```
