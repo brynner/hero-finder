@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import CharactersController from '../../controllers/CharactersController';
 
 import styled from 'styled-components';
-import { Container, Card, CardMedia, CardContent, CardActionArea, Grid } from '@material-ui/core';
+import { Container, Card, CardMedia, CardContent, CardActionArea, Grid, CircularProgress } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 
 export default class Home extends Component {
@@ -81,7 +81,9 @@ export default class Home extends Component {
               this.state.data && this.state.data.length ?
                 this.mountList()
                 :
-                'Loading...'
+                <div className="loading">
+                  <CircularProgress />
+                </div>
             }
 
           </Container>

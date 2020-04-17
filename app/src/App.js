@@ -1,6 +1,7 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
 import { routes } from "./utils/RouterUtil";
+import './App.css';
 
 // Sections
 import Home from './components/sections/home';
