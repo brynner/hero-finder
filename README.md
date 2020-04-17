@@ -40,6 +40,7 @@ Para deixar nossa aplicação mais atraente, vamos utilizar o Material UI como F
 
 ```
 npm install @material-ui/core
+npm install @material-ui/icons
 ```
 
 
