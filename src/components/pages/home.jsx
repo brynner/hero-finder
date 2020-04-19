@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { Container, Card, CardMedia, CardContent, CardActionArea, Grid, CircularProgress } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 
-import AppBar from '../../ui/AppBar';
+import AppBar from '../ui/AppBar';
 
 export default class Home extends Component {
 

@@ -4,7 +4,7 @@ import { routes } from "./utils/RouterUtil";
 import './App.css';
 
 // Sections
-import Home from './components/sections/home';
+import Home from './components/pages/home';
 
 function App() {
   return (
