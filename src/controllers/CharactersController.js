@@ -5,7 +5,14 @@ export default class CharactersController {
 
   static getCharacters() {
     return new Promise((resolve, reject) => {
-      axios.get(`${config.api.url}/characters?apikey=${config.api.key}`)
+      axios.get(`${config.api.url}/characters?apikey=${config.api.key}&limit=100`)
+        .then(result => resolve(result)).catch(result => reject(result));
+    })
+  }
+
+  static getSeriesByCharacterID(id) {
+    return new Promise((resolve, reject) => {
+      axios.get(`${config.api.url}/characters/${id}/series?apikey=${config.api.key}&limit=40`)
         .then(result => resolve(result)).catch(result => reject(result));
     })
   }

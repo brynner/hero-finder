@@ -3,8 +3,9 @@ import { Route } from 'react-router-dom';
 import { routes } from "./utils/RouterUtil";
 import './App.css';
 
-// Sections
-import Home from './components/pages/home';
+// Pages
+import HomePage from './components/pages/home';
+import HeroPage from './components/pages/hero';
 
 function App() {
   return (
@@ -12,7 +13,12 @@ function App() {
 
       <Route exact
         path={routes.home.path}
-        render={(props) => <Home {...props} />}
+        render={(props) => <HomePage {...props} />}
+      />
+
+      <Route exact
+        path={routes.hero.path}
+        render={(props) => <HeroPage {...props} />}
       />
 
     </div>
