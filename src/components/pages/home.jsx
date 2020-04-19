@@ -1,11 +1,32 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import CharactersController from '../../controllers/CharactersController';
 
 import styled from 'styled-components';
 import { Container, Card, CardMedia, CardContent, CardActionArea, Grid, CircularProgress } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
-
 import AppBar from '../ui/AppBar';
+
+/**
+ * Style
+ */
+const Style = styled.div`
+  .component-main {
+
+    .component-list {
+      margin-top: 100px;
+    }
+
+    .card {
+      margin-bottom: 10px;
+
+      .card-image {
+        height: 100px;
+      }
+
+    }
+  }
+`
 
 export default class Home extends Component {
 
@@ -44,7 +65,7 @@ export default class Home extends Component {
           <Grid key={index} item xs={12} sm={6} md={3}>
             <Card className="card">
 
-              <CardActionArea>
+              <CardActionArea component={Link} to={`/hero/${item.id}`}>
 
                 {!item.thumbnail.path ? '' :
                   <CardMedia
@@ -107,24 +128,3 @@ export default class Home extends Component {
   }
 
 }
-
-/**
- * Style
- */
-const Style = styled.div`
-  .component-main {
-
-    .component-list {
-      margin-top: 100px;
-    }
-
-    .card {
-      margin-bottom: 10px;
-
-      .card-image {
-        height: 100px;
-      }
-
-    }
-  }
-`
