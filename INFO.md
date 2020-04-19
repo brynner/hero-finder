@@ -69,3 +69,12 @@ CSS em componentes.
 ```
 npm install --save styled-components
 ```
+
+
+### Redux
+
+Controle de estado da aplicação.
+
+```
+npm install redux react-redux redux-thunk --save
+```
