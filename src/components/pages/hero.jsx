@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import CharactersController from '../../controllers/CharactersController';
+import * as URLUtil from '../../utils/URLUtil';
 
 import styled from 'styled-components';
 import { Container, Card, CardMedia, CardContent, Grid, CircularProgress } from '@material-ui/core';
@@ -79,7 +80,7 @@ export default class Hero extends Component {
               {!item.thumbnail.path ? '' :
                 <CardMedia
                   className="card-image"
-                  image={item.thumbnail.path + `.` + item.thumbnail.extension}
+                  image={URLUtil.replaceHTTPbyHTTPS(item.thumbnail.path) + `.` + item.thumbnail.extension}
                   title={item.name}
                 />
               }

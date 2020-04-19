@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import CharactersController from '../../controllers/CharactersController';
+import * as URLUtil from '../../utils/URLUtil';
 
 import styled from 'styled-components';
 import { Container, Card, CardMedia, CardContent, CardActionArea, Grid, CircularProgress } from '@material-ui/core';
@@ -70,7 +71,7 @@ export default class Home extends Component {
                 {!item.thumbnail.path ? '' :
                   <CardMedia
                     className="card-image"
-                    image={item.thumbnail.path + `.` + item.thumbnail.extension}
+                    image={URLUtil.replaceHTTPbyHTTPS(item.thumbnail.path) + `.` + item.thumbnail.extension}
                     title={item.name}
                   />
                 }
