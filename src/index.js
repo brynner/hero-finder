@@ -5,11 +5,17 @@ import * as serviceWorker from './serviceWorker';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { routes } from "./utils/RouterUtil";
 
+// Redux
+import { Provider } from "react-redux";
+import configureStore from "./store";
+
 ReactDOM.render(
   <React.StrictMode>
-    <Router>
-      <Route path={routes.home.path} component={App} />
-    </Router>
+    <Provider store={configureStore()}>
+      <Router>
+        <Route path={routes.home.path} component={App} />
+      </Router>
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );

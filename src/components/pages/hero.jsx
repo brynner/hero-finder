@@ -3,8 +3,13 @@ import CharactersController from '../../controllers/CharactersController';
 import * as URLUtil from '../../utils/URLUtil';
 
 import styled from 'styled-components';
-import { Container, Card, CardMedia, CardContent, Grid, CircularProgress } from '@material-ui/core';
+import { Container, Card, CardMedia, CardContent, Grid, CircularProgress, Button } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
+import EditIcon from '@material-ui/icons/Edit';
+
+// Redux
+import { connect } from "react-redux";
+import editModeAction from "../../actions/editModeAction";
 
 /**
  * Style
@@ -12,6 +17,10 @@ import Typography from '@material-ui/core/Typography';
 const Style = styled.div`
   .component-main {
 
+    .alignRight {
+      text-align: right;
+    }
+    
     .component-list {
       margin-top: 100px;
     }
@@ -37,7 +46,7 @@ const Style = styled.div`
   }
 `
 
-export default class Hero extends Component {
+class Hero extends Component {
 
   state = {
     data: [],
@@ -108,13 +117,47 @@ export default class Hero extends Component {
 
           <Container maxWidth="md" className="component-list">
 
-            <Typography variant="h1" component="h1">
-              Hero Name
-            </Typography>
+            <Grid container spacing={5}>
+              <Grid item xs={6}>
 
-            <Typography variant="h2" component="h2">
-              Series
-            </Typography>
+                <Typography variant="h1" component="h1">
+                  Hero Name
+                </Typography>
+
+                <Typography variant="h2" component="h2">
+                  Series
+                </Typography>
+
+              </Grid>
+
+              <Grid item xs={6} className="alignRight">
+
+                Edit mode? 
+                {this.props.editing ?
+                  'Yes'
+                  :
+                  'No'
+                }
+
+                <Button 
+                  variant="contained" 
+                  color="primary"
+                  startIcon={<EditIcon />}
+                  onClick={() => this.props.editModeAction(!this.props.editing)}
+                >
+                  Edit
+                </Button>
+                
+                <Button 
+                  variant="contained" 
+                  color="secondary"
+                  onClick={() => console.log(this.props)}
+                >
+                  Props
+                </Button>
+
+              </Grid>
+            </Grid>
 
             {
               this.state.data && this.state.data.length ?
@@ -131,3 +174,13 @@ export default class Hero extends Component {
     )
   }
 }
+
+const mapStateToProps = state => ({
+  ...state
+});
+
+const mapDispatchToProps = dispatch => ({
+  editModeAction: (payload) => dispatch(editModeAction(payload))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Hero);
