@@ -6,7 +6,6 @@ import * as URLUtil from '../../utils/URLUtil';
 import styled from 'styled-components';
 import { Container, Card, CardMedia, CardContent, CardActionArea, Grid, CircularProgress } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
-import AppBar from '../ui/AppBar';
 
 /**
  * Style
@@ -95,21 +94,10 @@ export default class Home extends Component {
     return <Grid container spacing={5}>{items}</Grid>;
   }
 
-  /**
-   * WhileTyping Component: Buscar após soltar tecla...
-   */
-  filterData = (name, value) => {
-
-    console.log('filterData');
-    
-  }
-
   render() {
     return (
       <Style>
         <main className="component-main">
-
-          <AppBar callback={this.filterData} />
 
           <Container maxWidth="md" className="component-list">
 
