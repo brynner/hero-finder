@@ -1,8 +1,11 @@
 import { createStore } from "redux";
-import editModeReducer from "./reducers/editModeReducer";
+import rootReducer from "./reducers/rootReducer";
 
-function configureStore(state = { editing: true }) {
-  return createStore(editModeReducer, state);
+function configureStore(state = {
+  editing: false, 
+  heroes: []
+}) {
+  return createStore(rootReducer, state);
 }
 
 export default configureStore;

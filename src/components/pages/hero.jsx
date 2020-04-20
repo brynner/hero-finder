@@ -10,6 +10,7 @@ import EditIcon from '@material-ui/icons/Edit';
 // Redux
 import { connect } from "react-redux";
 import editModeAction from "../../actions/editModeAction";
+import setHeroAction from "../../actions/setHeroAction";
 
 /**
  * Style
@@ -60,19 +61,55 @@ class Hero extends Component {
   getSeriesByCharacterID = () => {
 
     const id = this.props.match.params.id;
+    
+    // Se houver item no Redux
+    if (this.checkIfHeroIsIntoRedux(id, this.props.heroes)) {
 
-    CharactersController.getSeriesByCharacterID(id).then(result => {
+      console.log('From Redux baby');
 
-      console.log(result.data.data);
+      const indexHeroesObject = this.props.heroes.findIndex(item => item.id === id);
 
       this.setState({
-        data: result.data.data.results
+        data: this.props.heroes[indexHeroesObject].series
       });
 
-    }).catch(result => {
+    } else {
 
-      console.log(result);
+      console.log('From API bro');
 
+      CharactersController.getSeriesByCharacterID(id).then(result => {
+
+        console.log(result.data.data);
+
+        this.setState({
+          data: result.data.data.results
+        });
+
+        // Salva item no Redux
+        this.storeHeroesIntoRedux(id, result.data.data.results);
+
+      }).catch(result => {
+
+        console.log(result);
+
+      });
+    }
+
+  }
+
+  checkIfHeroIsIntoRedux = (id, heroes) => {
+
+    if (!heroes) return;
+
+    const verifyObjectID = heroes.some(obj => obj.id === id);
+
+    return verifyObjectID;
+  }
+
+  storeHeroesIntoRedux = (id, series) => {
+    this.props.setHeroAction({
+      id: id,
+      series: series
     });
   }
 
@@ -132,26 +169,26 @@ class Hero extends Component {
 
               <Grid item xs={6} className="alignRight">
 
-                Edit mode? 
+                Edit mode?
                 {this.props.editing ?
                   'Yes'
                   :
                   'No'
                 }
 
-                <Button 
-                  variant="contained" 
+                <Button
+                  variant="contained"
                   color="primary"
                   startIcon={<EditIcon />}
                   onClick={() => this.props.editModeAction(!this.props.editing)}
                 >
                   Edit
                 </Button>
-                
-                <Button 
-                  variant="contained" 
+
+                <Button
+                  variant="contained"
                   color="secondary"
-                  onClick={() => console.log(this.props)}
+                  onClick={() => console.log(this.props.heroes)}
                 >
                   Props
                 </Button>
@@ -180,7 +217,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  editModeAction: (payload) => dispatch(editModeAction(payload))
+  editModeAction: (payload) => dispatch(editModeAction(payload)),
+  setHeroAction: (payload) => dispatch(setHeroAction(payload))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Hero);

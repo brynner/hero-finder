@@ -8,10 +8,6 @@ import AppBar from './components/ui/AppBar';
 import HomePage from './components/pages/home';
 import HeroPage from './components/pages/hero';
 
-// Redux
-import { connect } from "react-redux";
-import editModeAction from "./actions/editModeAction";
-
 class App extends Component {
 
   /**
@@ -39,29 +35,9 @@ class App extends Component {
           render={(props) => <HeroPage {...props} />}
         />
 
-        {this.props.editing ?
-          'Yes'
-          :
-          'No'
-        }
-
-        <button
-          onClick={() => this.props.editModeAction(!this.props.editing)}
-        >
-          Toggle
-        </button>
-
       </div>
     )
   }
 }
 
-const mapStateToProps = state => ({
-  ...state
-});
-
-const mapDispatchToProps = dispatch => ({
-  editModeAction: (payload) => dispatch(editModeAction(payload))
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default App;
