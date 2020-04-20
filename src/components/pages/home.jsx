@@ -43,8 +43,6 @@ export default class Home extends Component {
 
     CharactersController.getCharacters().then(result => {
 
-      console.log(result.data.data);
-
       this.setState({
         data: result.data.data.results
       });

@@ -42,7 +42,8 @@ const Style = styled.div`
 
     h2 {
       margin-bottom: 20px;
-      font-size: 20px;
+      font-size: 18px;
+      font-style: italic;
     }
   }
 `
@@ -70,6 +71,8 @@ class Hero extends Component {
       const indexHeroesObject = this.props.heroes.findIndex(item => item.id === id);
 
       this.setState({
+        name: this.props.heroes[indexHeroesObject].name,
+        description: this.props.heroes[indexHeroesObject].description,
         data: this.props.heroes[indexHeroesObject].series
       });
 
@@ -77,22 +80,40 @@ class Hero extends Component {
 
       console.log('From API bro');
 
-      CharactersController.getSeriesByCharacterID(id).then(result => {
+      /**
+       * Character (Hero) Info
+       */
+      CharactersController.getCharacter(id).then(result => {
 
-        console.log(result.data.data);
-
-        this.setState({
-          data: result.data.data.results
+        const heroName = result.data.data.results[0].name;
+        const heroDescription = result.data.data.results.description;
+        
+        /**
+         * Series
+         */
+        CharactersController.getSeriesByCharacterID(id).then(result => {
+  
+          this.setState({
+            name: heroName,
+            description: heroDescription,
+            data: result.data.data.results
+          });
+  
+          // Salva item no Redux
+          this.storeHeroesIntoRedux(id, heroName, heroDescription, result.data.data.results);
+  
+        }).catch(result => {
+  
+          console.log(result);
+  
         });
-
-        // Salva item no Redux
-        this.storeHeroesIntoRedux(id, result.data.data.results);
 
       }).catch(result => {
 
         console.log(result);
 
       });
+
     }
 
   }
@@ -106,10 +127,12 @@ class Hero extends Component {
     return verifyObjectID;
   }
 
-  storeHeroesIntoRedux = (id, series) => {
+  storeHeroesIntoRedux = (id, name, description, series) => {
     this.props.setHeroAction({
-      id: id,
-      series: series
+      id,
+      name,
+      description,
+      series
     });
   }
 
@@ -154,56 +177,66 @@ class Hero extends Component {
 
           <Container maxWidth="md" className="component-list">
 
-            <Grid container spacing={5}>
-              <Grid item xs={6}>
+          {
+            this.state.data && this.state.data.length ?
+            <>
+              <Grid container spacing={5}>
+                <Grid item xs={6}>
 
-                <Typography variant="h1" component="h1">
-                  Hero Name
-                </Typography>
+                  <Typography variant="h1" component="h1">
+                    Series • {this.state.name}
+                  </Typography>
 
-                <Typography variant="h2" component="h2">
-                  Series
-                </Typography>
+                  <Typography variant="h2" component="h2">
+                    {
+                      this.state.description ?
+                      this.state.description
+                      :
+                      'No Description...'
+                    }
+                  </Typography>
 
+                </Grid>
+
+                <Grid item xs={6} className="alignRight">
+
+                  Edit mode?
+                  {this.props.editing ?
+                    'Yes'
+                    :
+                    'No'
+                  }
+
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    startIcon={<EditIcon />}
+                    onClick={() => this.props.editModeAction(!this.props.editing)}
+                  >
+                    Edit
+                  </Button>
+
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => console.log(this.props.heroes)}
+                  >
+                    Props
+                  </Button>
+
+                </Grid>
               </Grid>
-
-              <Grid item xs={6} className="alignRight">
-
-                Edit mode?
-                {this.props.editing ?
-                  'Yes'
-                  :
-                  'No'
-                }
-
-                <Button
-                  variant="contained"
-                  color="primary"
-                  startIcon={<EditIcon />}
-                  onClick={() => this.props.editModeAction(!this.props.editing)}
-                >
-                  Edit
-                </Button>
-
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  onClick={() => console.log(this.props.heroes)}
-                >
-                  Props
-                </Button>
-
-              </Grid>
-            </Grid>
-
-            {
-              this.state.data && this.state.data.length ?
+              
+              {
                 this.mountList()
-                :
-                <div className="loading">
-                  <CircularProgress />
-                </div>
-            }
+              }
+
+            </>
+            :
+            <div className="loading">
+              <CircularProgress />
+            </div>
+          }
 
           </Container>
         </main>
