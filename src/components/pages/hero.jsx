@@ -3,7 +3,7 @@ import CharactersController from '../../controllers/CharactersController';
 import * as URLUtil from '../../utils/URLUtil';
 
 import styled from 'styled-components';
-import { Container, Card, CardMedia, CardContent, Grid, CircularProgress, Button } from '@material-ui/core';
+import { Container, Card, CardMedia, CardContent, Grid, CircularProgress, Button, TextField } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import EditIcon from '@material-ui/icons/Edit';
 import SaveIcon from '@material-ui/icons/Save';
@@ -12,6 +12,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import { connect } from "react-redux";
 import editModeAction from "../../actions/editModeAction";
 import setHeroAction from "../../actions/setHeroAction";
+import updateHeroAction from "../../actions/updateHeroAction";
 
 /**
  * Style
@@ -46,18 +47,25 @@ const Style = styled.div`
       font-size: 18px;
       font-style: italic;
     }
+
+    .descriptionField {
+      width: 100%;
+    }
   }
 `
 
 class Hero extends Component {
 
   state = {
-    data: [],
-    results: []
+    data: []
   };
 
   componentDidMount() {
     this.getSeriesByCharacterID();
+  }
+
+  findIndexObject = (id, object) => {
+    return object.findIndex(item => item.id === id);
   }
 
   getSeriesByCharacterID = () => {
@@ -69,12 +77,14 @@ class Hero extends Component {
 
       console.log('From Redux baby');
 
-      const indexHeroesObject = this.props.heroes.findIndex(item => item.id === id);
+      const indexHeroesObject = this.findIndexObject(id, this.props.heroes);
 
       this.setState({
+        index: indexHeroesObject,
+        id: this.props.heroes[indexHeroesObject].id,
         name: this.props.heroes[indexHeroesObject].name,
         description: this.props.heroes[indexHeroesObject].description,
-        data: this.props.heroes[indexHeroesObject].series
+        series: this.props.heroes[indexHeroesObject].series
       });
 
     } else {
@@ -95,9 +105,10 @@ class Hero extends Component {
         CharactersController.getSeriesByCharacterID(id).then(result => {
   
           this.setState({
+            id: id,
             name: heroName,
             description: heroDescription,
-            data: result.data.data.results
+            series: result.data.data.results
           });
   
           // Salva item no Redux
@@ -137,9 +148,36 @@ class Hero extends Component {
     });
   }
 
+  onChangeHero = (e) => {
+    this.setState({ [e.target.name]: e.target.value });
+  }
+  
+  updateHero = () => {
+
+    const id = this.props.match.params.id;
+    const indexHeroesObject = this.findIndexObject(id, this.props.heroes);
+
+    this.props.updateHeroAction({
+      index: indexHeroesObject,
+      id: this.state.id,
+      name: this.state.name,
+      description: this.state.description,
+      series: this.state.series
+    });
+  }
+
+  editHero = () => {
+
+    if (this.props.editing) {
+      this.updateHero();
+    }
+
+    this.props.editModeAction(!this.props.editing);
+  }
+
   mountList = () => {
     let items = [];
-    this.state.data.map((item, index) => {
+    this.state.series.map((item, index) => {
       return (
         items.push(
 
@@ -179,7 +217,7 @@ class Hero extends Component {
           <Container maxWidth="md" className="component-list">
 
           {
-            this.state.data && this.state.data.length ?
+            this.state.series && this.state.series.length ?
             <>
               <Grid container spacing={5}>
                 <Grid item xs={6}>
@@ -190,6 +228,16 @@ class Hero extends Component {
 
                   <Typography variant="h2" component="h2">
                     {
+                      this.props.editing ?
+                      <TextField
+                        className="descriptionField"
+                        name="description"
+                        placeholder="Description"
+                        value={this.state.description}
+                        multiline
+                        onChange={this.onChangeHero}
+                      />
+                      :
                       this.state.description ?
                       this.state.description
                       :
@@ -206,11 +254,14 @@ class Hero extends Component {
                     size="small"
                     color={this.props.editing ? 'primary' : 'secondary'}
                     startIcon={this.props.editing? <SaveIcon /> : <EditIcon />}
-                    onClick={() => this.props.editModeAction(!this.props.editing)}
+                    onClick={
+                      () => this.editHero()
+                    }
                   >
                     {this.props.editing ? 'Save' : 'Edit'}
                   </Button>
-
+                  
+                  {/*
                   <Button
                     size="small"
                     variant="contained"
@@ -219,6 +270,7 @@ class Hero extends Component {
                   >
                     Props
                   </Button>
+                  */}
 
                 </Grid>
               </Grid>
@@ -247,7 +299,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   editModeAction: (payload) => dispatch(editModeAction(payload)),
-  setHeroAction: (payload) => dispatch(setHeroAction(payload))
+  setHeroAction: (payload) => dispatch(setHeroAction(payload)),
+  updateHeroAction: (payload) => dispatch(updateHeroAction(payload))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Hero);
