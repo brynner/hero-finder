@@ -10,6 +10,10 @@ import Menu from '@material-ui/core/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 
+// Redux
+import { connect } from "react-redux";
+import searchAction from "../../actions/searchAction";
+
 const useStyles = makeStyles(theme => ({
   grow: {
     flexGrow: 1,
@@ -62,7 +66,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function PrimarySearchAppBar(props) {
+function PrimarySearchAppBar(props) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -86,6 +90,10 @@ export default function PrimarySearchAppBar(props) {
   const handleMobileMenuOpen = event => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
+
+  const searchHero = (e) => {
+    props.searchAction(e.target.value);
+  }
 
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
@@ -130,6 +138,7 @@ export default function PrimarySearchAppBar(props) {
   /**
    * Search
    */
+  /*
   const callback = (value) => {
     props.callback(props.name, value);
   }
@@ -147,6 +156,7 @@ export default function PrimarySearchAppBar(props) {
       callback(valueTyped);
     }, 3000);
   }
+  */
 
   return (
     <div className={classes.grow}>
@@ -166,7 +176,9 @@ export default function PrimarySearchAppBar(props) {
                 input: classes.inputInput,
               }}
               inputProps={{ 'aria-label': 'search' }}
-              onChange={(e) => whileTyping(e)}
+              //onChange={(e) => whileTyping(e)}
+              onChange={(e) => searchHero(e)}
+              value={props.query}
             />
           </div>
           <div className={classes.grow} />
@@ -177,3 +189,13 @@ export default function PrimarySearchAppBar(props) {
     </div>
   );
 }
+
+const mapStateToProps = state => ({
+  ...state
+});
+
+const mapDispatchToProps = dispatch => ({
+  searchAction: (payload) => dispatch(searchAction(payload))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(PrimarySearchAppBar);

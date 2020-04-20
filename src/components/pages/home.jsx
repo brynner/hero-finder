@@ -3,9 +3,15 @@ import { Link } from 'react-router-dom';
 import CharactersController from '../../controllers/CharactersController';
 import * as URLUtil from '../../utils/URLUtil';
 
+import AppBar from '../../components/ui/AppBar';
+
 import styled from 'styled-components';
 import { Container, Card, CardMedia, CardContent, CardActionArea, Grid, CircularProgress } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
+
+// Redux
+import { connect } from "react-redux";
+import searchAction from "../../actions/searchAction";
 
 /**
  * Style
@@ -25,10 +31,15 @@ const Style = styled.div`
       }
 
     }
+
+    h1 {
+      margin-bottom: 30px;
+      font-size: 24px;
+    }
   }
 `
 
-export default class Home extends Component {
+class Home extends Component {
 
   state = {
     data: [],
@@ -37,6 +48,11 @@ export default class Home extends Component {
 
   componentDidMount() {
     this.getCharacters();
+
+    if (this.props.query.length > 2) {
+      console.log('go');
+    }
+
   }
 
   getCharacters = () => {
@@ -52,6 +68,10 @@ export default class Home extends Component {
       console.log(result);
 
     });
+  }
+
+  searchCharacters = () => {
+    console.log('searchCharacters');
   }
 
   mountList = () => {
@@ -97,11 +117,24 @@ export default class Home extends Component {
       <Style>
         <main className="component-main">
 
+          <AppBar />
+
           <Container maxWidth="md" className="component-list">
 
             {
               this.state.data && this.state.data.length ?
-                this.mountList()
+                <>
+                  {
+                    this.props.query.length ?
+                    <Typography variant="h1" component="h1">
+                      Resultados para "{this.props.query}"
+                    </Typography>
+                    : ''
+                  }
+                  {
+                    this.mountList()
+                  }
+                </>
                 :
                 <div className="loading">
                   <CircularProgress />
@@ -115,3 +148,14 @@ export default class Home extends Component {
   }
 
 }
+
+
+const mapStateToProps = state => ({
+  ...state
+});
+
+const mapDispatchToProps = dispatch => ({
+  searchAction: (payload) => dispatch(searchAction(payload))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

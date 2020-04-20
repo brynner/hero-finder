@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import CharactersController from '../../controllers/CharactersController';
 import * as URLUtil from '../../utils/URLUtil';
 
+import AppBar from '../../components/ui/AppBar';
+
 import styled from 'styled-components';
 import { Container, Card, CardMedia, CardContent, Grid, CircularProgress, Button, TextField } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
@@ -213,6 +215,8 @@ class Hero extends Component {
     return (
       <Style>
         <main className="component-main">
+
+          <AppBar />
 
           <Container maxWidth="md" className="component-list">
 
