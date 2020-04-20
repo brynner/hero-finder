@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import { Container, Card, CardMedia, CardContent, Grid, CircularProgress, Button } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import EditIcon from '@material-ui/icons/Edit';
+import SaveIcon from '@material-ui/icons/Save';
 
 // Redux
 import { connect } from "react-redux";
@@ -199,26 +200,21 @@ class Hero extends Component {
                 </Grid>
 
                 <Grid item xs={6} className="alignRight">
-
-                  Edit mode?
-                  {this.props.editing ?
-                    'Yes'
-                    :
-                    'No'
-                  }
-
+                  
                   <Button
                     variant="contained"
-                    color="primary"
-                    startIcon={<EditIcon />}
+                    size="small"
+                    color={this.props.editing ? 'primary' : 'secondary'}
+                    startIcon={this.props.editing? <SaveIcon /> : <EditIcon />}
                     onClick={() => this.props.editModeAction(!this.props.editing)}
                   >
-                    Edit
+                    {this.props.editing ? 'Save' : 'Edit'}
                   </Button>
 
                   <Button
+                    size="small"
                     variant="contained"
-                    color="secondary"
+                    color="default"
                     onClick={() => console.log(this.props.heroes)}
                   >
                     Props
