@@ -124,13 +124,13 @@ class Home extends Component {
             {
               this.state.data && this.state.data.length ?
                 <>
-                  {
-                    this.props.query.length ?
                     <Typography variant="h1" component="h1">
-                      Resultados para "{this.props.query}"
+                      {this.props.query.length ?
+                      `Results for "${this.props.query}"`
+                      :
+                      `Choose a Hero`
+                      }
                     </Typography>
-                    : ''
-                  }
                   {
                     this.mountList()
                   }
