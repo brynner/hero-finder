@@ -6,7 +6,7 @@ import * as URLUtil from '../../utils/URLUtil';
 import AppBar from '../../components/ui/AppBar';
 
 import styled from 'styled-components';
-import { Container, Card, CardMedia, CardContent, CardActionArea, Grid, CircularProgress } from '@material-ui/core';
+import { Container, Card, CardMedia, CardContent, CardActionArea, Grid, CircularProgress, Button } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 
 // Redux
@@ -35,6 +35,11 @@ const Style = styled.div`
     h1 {
       margin-bottom: 30px;
       font-size: 24px;
+    }
+
+    .btn-show-more {
+      margin: 40px 0px;
+      width: 100%;
     }
   }
 `
@@ -72,8 +77,28 @@ class Home extends Component {
     }
   }
 
-  searchCharacters = () => {
-    console.log('searchCharacters');
+  loadMore = () => {
+
+    const currentResults = this.props.query.results;
+    const amountOfItems = this.props.query.results.length;
+    const queryString = this.props.query.string ? this.props.query.string : '';
+    
+    CharactersController.getCharacters(queryString, amountOfItems).then(result => {
+
+      const updatedResults = currentResults.concat(result.data.data.results);
+
+      // Adicionar mais resultados no Reducer
+      this.props.searchAction({
+        searching: false,
+        string: queryString,
+        results: updatedResults
+      });
+
+    }).catch(result => {
+
+      console.log(result);
+    });
+    
   }
 
   mountList = (data) => {
@@ -130,19 +155,27 @@ class Home extends Component {
                   <CircularProgress />
                 </div>
 
-              :
+                :
                 this.props.query.results.length ?
                   <>
-                      <Typography variant="h1" component="h1">
-                        {this.props.query.string.length ?
+                    <Typography variant="h1" component="h1">
+                      {this.props.query.string.length ?
                         `Results for "${this.props.query.string}"`
                         :
                         `Choose a Hero`
-                        }
-                      </Typography>
+                      }
+                    </Typography>
                     {
                       this.mountList(this.props.query.results)
                     }
+                    <Button
+                      className="btn-show-more"
+                      variant="contained" 
+                      color="primary" 
+                      onClick={() => this.loadMore()}
+                    >
+                      {`Show more`}
+                    </Button>
                   </>
                   :
                   <Typography variant="h1" component="h1">
