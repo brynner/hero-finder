@@ -48,35 +48,39 @@ class Home extends Component {
 
   componentDidMount() {
     this.getCharacters();
-
-    if (this.props.query.length > 2) {
-      console.log('go');
-    }
-
   }
 
   getCharacters = () => {
 
-    CharactersController.getCharacters().then(result => {
+    // Se não houver dados no Reducer
+    if (!this.props.query.results.length) {
 
-      this.setState({
-        data: result.data.data.results
+      CharactersController.getCharacters().then(result => {
+
+        this.setState({
+          data: result.data.data.results
+        });
+
+        // Armazenar resultados no Reducer
+        this.props.searchAction({
+          string: '',
+          results: result.data.data.results
+        });
+
+      }).catch(result => {
+
+        console.log(result);
       });
-
-    }).catch(result => {
-
-      console.log(result);
-
-    });
+    }
   }
 
   searchCharacters = () => {
     console.log('searchCharacters');
   }
 
-  mountList = () => {
+  mountList = (data) => {
     let items = [];
-    this.state.data.map((item, index) => {
+    data.map((item, index) => {
       return (
         items.push(
 
@@ -122,17 +126,17 @@ class Home extends Component {
           <Container maxWidth="md" className="component-list">
 
             {
-              this.state.data && this.state.data.length ?
+              this.props.query.results.length ?
                 <>
                     <Typography variant="h1" component="h1">
                       {this.props.query.length ?
-                      `Results for "${this.props.query}"`
+                      `Results for "${this.props.query.string}"`
                       :
                       `Choose a Hero`
                       }
                     </Typography>
                   {
-                    this.mountList()
+                    this.mountList(this.props.query.results)
                   }
                 </>
                 :

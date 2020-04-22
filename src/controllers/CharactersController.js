@@ -3,9 +3,9 @@ const config = require('../configs/config.json');
 
 export default class CharactersController {
 
-  static getCharacters() {
+  static getCharacters(queryString) {
     return new Promise((resolve, reject) => {
-      axios.get(`${config.api.url}/characters?apikey=${config.api.key}&limit=100`)
+      axios.get(`${config.api.url}/characters?apikey=${config.api.key}&limit=100${queryString ? `&nameStartsWith=${queryString}` : '' } `)
         .then(result => resolve(result)).catch(result => reject(result));
     })
   }
@@ -20,13 +20,6 @@ export default class CharactersController {
   static getSeriesByCharacterID(id) {
     return new Promise((resolve, reject) => {
       axios.get(`${config.api.url}/characters/${id}/series?apikey=${config.api.key}&limit=40`)
-        .then(result => resolve(result)).catch(result => reject(result));
-    })
-  }
-
-  static searchCharacters() {
-    return new Promise((resolve, reject) => {
-      axios.get(`${config.api.url}/characters?apikey=${config.api.key}&nameStartsWith=`)
         .then(result => resolve(result)).catch(result => reject(result));
     })
   }

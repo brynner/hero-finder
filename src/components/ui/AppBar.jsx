@@ -10,6 +10,8 @@ import Menu from '@material-ui/core/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 
+import CharactersController from '../../controllers/CharactersController';
+
 // Redux
 import { connect } from "react-redux";
 import searchAction from "../../actions/searchAction";
@@ -67,7 +69,12 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function PrimarySearchAppBar(props) {
+
   const classes = useStyles();
+
+  const [searchQuery, setSearchQuery] = React.useState(props.query.string);
+  const [searchTimeout, setSearchTimeout] = React.useState(0);
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -91,9 +98,50 @@ function PrimarySearchAppBar(props) {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
-  const searchHero = (e) => {
-    props.searchAction(e.target.value);
+  // Serch Field
+  const storeQueryString = (event) => {
+    setSearchQuery(event.target.value);
   }
+
+  const typingToSearch = (event) => {
+    if (searchTimeout) clearTimeout(searchTimeout);
+
+    // Se digita o enter, consulta imediatamente
+    if (event.key === 'Enter') {
+      searchHero();
+    } else {
+      setSearchTimeout(setTimeout(() => {
+        searchHero();
+      }, 3000));
+    }
+  }
+
+  // Reseta Consulta
+  const resetSearch = () => {
+    props.searchAction({
+      string: '',
+      results: []
+    });
+  }
+
+  // Consultar API de Busca
+  const searchHero = () => {
+
+    resetSearch();
+
+    CharactersController.getCharacters(searchQuery).then(result => {
+
+      // Armazenar resultados no Reducer
+      props.searchAction({
+        string: searchQuery,
+        results: result.data.data.results
+      });
+
+    }).catch(result => {
+      console.log(result);
+    });
+  }
+
 
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
@@ -135,29 +183,6 @@ function PrimarySearchAppBar(props) {
     </Menu>
   );
 
-  /**
-   * Search
-   */
-  /*
-  const callback = (value) => {
-    props.callback(props.name, value);
-  }
-
-  const whileTyping = (e) => {
-
-    const valueTyped = e.target.value;
-    let typingTimeout = 0;
-
-    if (typingTimeout) {
-      clearTimeout(typingTimeout);
-    }
-
-    typingTimeout = setTimeout(() => {
-      callback(valueTyped);
-    }, 3000);
-  }
-  */
-
   return (
     <div className={classes.grow}>
       <AppBar position="fixed">
@@ -176,9 +201,9 @@ function PrimarySearchAppBar(props) {
                 input: classes.inputInput,
               }}
               inputProps={{ 'aria-label': 'search' }}
-              //onChange={(e) => whileTyping(e)}
-              onChange={(e) => searchHero(e)}
-              value={props.query}
+              onChange={storeQueryString}
+              onKeyPress={typingToSearch}
+              value={searchQuery}
             />
           </div>
           <div className={classes.grow} />
