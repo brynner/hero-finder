@@ -5,6 +5,7 @@ function configureStore(state = {
   query: {
     searching: false, 
     string: '',
+    total: 0,
     results: []
   },
   editing: false, 

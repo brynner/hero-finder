@@ -58,6 +58,7 @@ class Home extends Component {
       this.props.searchAction({
         searching: true,
         string: '',
+        total: 0,
         results: []
       });
 
@@ -67,6 +68,7 @@ class Home extends Component {
         this.props.searchAction({
           searching: false,
           string: '',
+          total: result.data.data.total,
           results: result.data.data.results
         });
 
@@ -81,6 +83,7 @@ class Home extends Component {
 
     const currentResults = this.props.query.results;
     const amountOfItems = this.props.query.results.length;
+    const total = this.props.query.total;
     const queryString = this.props.query.string ? this.props.query.string : '';
     
     CharactersController.getCharacters(queryString, amountOfItems).then(result => {
@@ -91,6 +94,7 @@ class Home extends Component {
       this.props.searchAction({
         searching: false,
         string: queryString,
+        total: total,
         results: updatedResults
       });
 
@@ -160,22 +164,26 @@ class Home extends Component {
                   <>
                     <Typography variant="h1" component="h1">
                       {this.props.query.string.length ?
-                        `Results for "${this.props.query.string}"`
+                        `${this.props.query.total} Results for "${this.props.query.string}"`
                         :
-                        `Choose a Hero`
+                        `${this.props.query.total} Heroes Available`
                       }
                     </Typography>
                     {
                       this.mountList(this.props.query.results)
                     }
-                    <Button
-                      className="btn-show-more"
-                      variant="contained" 
-                      color="primary" 
-                      onClick={() => this.loadMore()}
-                    >
-                      {`Show more`}
-                    </Button>
+                    {
+                      this.props.query.total > this.props.query.results.length ? 
+                      <Button
+                        className="btn-show-more"
+                        variant="contained" 
+                        color="primary" 
+                        onClick={() => this.loadMore()}
+                      >
+                        {`Show more`}
+                      </Button>
+                      : ''
+                    }
                   </>
                   :
                   <Typography variant="h1" component="h1">

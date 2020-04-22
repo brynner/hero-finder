@@ -127,6 +127,7 @@ function PrimarySearchAppBar(props) {
     props.searchAction({
       searching: true,
       string: '',
+      total: 0,
       results: []
     });
 
@@ -136,6 +137,7 @@ function PrimarySearchAppBar(props) {
       props.searchAction({
         searching: false,
         string: searchQuery,
+        total: result.data.data.total,
         results: result.data.data.results
       });
 
