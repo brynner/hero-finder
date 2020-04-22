@@ -1,4 +1,6 @@
 import React from 'react';
+import { useHistory } from "react-router-dom";
+
 import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -70,6 +72,8 @@ const useStyles = makeStyles(theme => ({
 
 function PrimarySearchAppBar(props) {
 
+  const history = useHistory();
+
   const classes = useStyles();
 
   const [searchQuery, setSearchQuery] = React.useState(props.query.string);
@@ -118,7 +122,8 @@ function PrimarySearchAppBar(props) {
 
   // Consultar API de Busca
   const searchHero = () => {
-
+    
+    // Redux
     props.searchAction({
       searching: true,
       string: '',
@@ -133,6 +138,9 @@ function PrimarySearchAppBar(props) {
         string: searchQuery,
         results: result.data.data.results
       });
+
+      // Go to home
+      history.push('/');
 
     }).catch(result => {
       console.log(result);
