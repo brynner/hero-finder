@@ -3,6 +3,7 @@ import rootReducer from "./reducers/rootReducer";
 
 function configureStore(state = {
   query: {
+    searching: false, 
     string: '',
     results: []
   },

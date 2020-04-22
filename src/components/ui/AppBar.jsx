@@ -116,23 +116,20 @@ function PrimarySearchAppBar(props) {
     }
   }
 
-  // Reseta Consulta
-  const resetSearch = () => {
-    props.searchAction({
-      string: '',
-      results: []
-    });
-  }
-
   // Consultar API de Busca
   const searchHero = () => {
 
-    resetSearch();
+    props.searchAction({
+      searching: true,
+      string: '',
+      results: []
+    });
 
     CharactersController.getCharacters(searchQuery).then(result => {
 
       // Armazenar resultados no Reducer
       props.searchAction({
+        searching: false,
         string: searchQuery,
         results: result.data.data.results
       });

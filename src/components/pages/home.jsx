@@ -41,11 +41,6 @@ const Style = styled.div`
 
 class Home extends Component {
 
-  state = {
-    data: [],
-    results: []
-  };
-
   componentDidMount() {
     this.getCharacters();
   }
@@ -55,14 +50,17 @@ class Home extends Component {
     // Se não houver dados no Reducer
     if (!this.props.query.results.length) {
 
-      CharactersController.getCharacters().then(result => {
+      this.props.searchAction({
+        searching: true,
+        string: '',
+        results: []
+      });
 
-        this.setState({
-          data: result.data.data.results
-        });
+      CharactersController.getCharacters().then(result => {
 
         // Armazenar resultados no Reducer
         this.props.searchAction({
+          searching: false,
           string: '',
           results: result.data.data.results
         });
@@ -126,23 +124,30 @@ class Home extends Component {
           <Container maxWidth="md" className="component-list">
 
             {
-              this.props.query.results.length ?
-                <>
-                    <Typography variant="h1" component="h1">
-                      {this.props.query.length ?
-                      `Results for "${this.props.query.string}"`
-                      :
-                      `Choose a Hero`
-                      }
-                    </Typography>
-                  {
-                    this.mountList(this.props.query.results)
-                  }
-                </>
-                :
+              this.props.query.searching ?
+
                 <div className="loading">
                   <CircularProgress />
                 </div>
+
+              :
+                this.props.query.results.length ?
+                  <>
+                      <Typography variant="h1" component="h1">
+                        {this.props.query.string.length ?
+                        `Results for "${this.props.query.string}"`
+                        :
+                        `Choose a Hero`
+                        }
+                      </Typography>
+                    {
+                      this.mountList(this.props.query.results)
+                    }
+                  </>
+                  :
+                  <Typography variant="h1" component="h1">
+                    {`Hero Not Found`}
+                  </Typography>
             }
 
           </Container>
